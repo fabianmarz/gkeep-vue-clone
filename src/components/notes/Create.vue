@@ -1,7 +1,7 @@
 <template>
 <form @submit.prevent="createNote" class="create-note">
-  <input type="text" name="title" v-model="title">
-  <textarea name="content" v-model="content"></textarea>
+  <input type="text" name="title" placeholder="Title" v-model="title">
+  <textarea name="content" placeholder="Text goes here..." v-model="content"></textarea>
   <button type="submit">+</button>
 </form>
 </template>
