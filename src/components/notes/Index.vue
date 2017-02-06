@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import database from '../../database'
+import noteRepository from '../../data/NoteRepository'
 import Masonry from 'masonry-layout'
 import Note from './Note'
 
@@ -18,20 +18,33 @@ export default {
       notes: []
     }
   },
+  watch: {
+    'notes': {
+      handler () {
+        this.masonry.reloadItems()
+        this.masonry.layout()
+      },
+      deep: true
+    }
+  },
   mounted () {
-    let masonry = new Masonry(this.$refs.notes, {
+    this.masonry = new Masonry(this.$refs.notes, {
       itemSelector: '.note',
       columnWidth: 240,
       gutter: 16,
       fitWidth: true
     })
-    database.ref('notes').on('child_added', (snapshot) => {
-      let note = snapshot.val()
+    noteRepository.on('added', (note) => {
       this.notes.unshift(note)
-      this.$nextTick(() => {
-        masonry.reloadItems()
-        masonry.layout()
-      })
+    })
+    noteRepository.on('changed', ({key, title, content}) => {
+      let outdatedNote = noteRepository.find(this.notes, key)
+      outdatedNote.title = title
+      outdatedNote.content = content
+    })
+    noteRepository.on('removed', ({key}) => {
+      let noteToRemove = noteRepository.findIndex(this.notes, key)
+      this.notes.splice(noteToRemove, 1)
     })
   }
 }

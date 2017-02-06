@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import database from '../../database'
+import noteRepository from '../../data/NoteRepository'
 
 export default {
   data () {
@@ -18,14 +18,15 @@ export default {
   },
   methods: {
     createNote () {
-      let payload = {
-        title: this.title,
-        content: this.content
-      }
-      database.ref('notes').push(payload)
-        .then((data) => {
-          console.log(data.key)
+      if (this.title.trim() || this.content.trim()) {
+        noteRepository.create({title: this.title, content: this.content}, (err) => {
+          if (err) {
+            throw err
+          }
+          this.title = ''
+          this.content = ''
         })
+      }
     }
   }
 }
