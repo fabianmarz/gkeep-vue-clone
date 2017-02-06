@@ -1,18 +1,31 @@
 <template>
   <div id="app">
     <create-note-form></create-note-form>
-    <notes></notes>
+    <notes @selectNote="selectNote"></notes>
+    <update-modal :note="selectedNote"></update-modal>
   </div>
 </template>
 
 <script>
 import Notes from './components/notes/Index'
 import CreateNoteForm from './components/notes/Create'
+import UpdateModal from './components/notes/UpdateModal'
 
 export default {
   components: {
     Notes,
-    CreateNoteForm
+    CreateNoteForm,
+    UpdateModal
+  },
+  data () {
+    return {
+      selectedNote: null
+    }
+  },
+  methods: {
+    selectNote (note) {
+      this.selectedNote = note
+    }
   }
 }
 </script>

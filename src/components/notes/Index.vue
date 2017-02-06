@@ -1,6 +1,6 @@
 <template>
 <div class="notes" ref="notes">
-  <note v-for="note in notes" :note="note"></note>
+  <note v-for="note in notes" :note="note" @click.native="selectNote(note)"></note>
 </div>
 </template>
 
@@ -16,6 +16,11 @@ export default {
   data () {
     return {
       notes: []
+    }
+  },
+  methods: {
+    selectNote ({key, title, content}) {
+      this.$emit('selectNote', {key, title, content})
     }
   },
   watch: {
